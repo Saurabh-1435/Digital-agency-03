@@ -1,4 +1,5 @@
 
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -104,6 +105,33 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+  
+  /* Section divider styles */
+  .section-divider {
+    height: 100px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .section-divider svg {
+    position: absolute;
+    width: 100%;
+    height: 100px;
+  }
+  
+  /* Improved glow effects */
+  .glow-on-hover:hover {
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.6);
+  }
+  
+  .glow-orange:hover {
+    box-shadow: 0 0 15px rgba(249, 115, 22, 0.6);
+  }
+  
+  .glow-blue:hover {
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.6);
   }
 }
 

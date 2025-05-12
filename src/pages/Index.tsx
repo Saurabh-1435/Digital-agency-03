@@ -16,7 +16,7 @@ const Index = () => {
     const observerOptions = {
       root: null,
       rootMargin: '0px',
-      threshold: 0.15 // Slightly increased threshold for better detection
+      threshold: 0.1 // Slightly lower threshold for better detection
     };
 
     const handleIntersect = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
@@ -26,7 +26,6 @@ const Index = () => {
           entry.target.classList.remove('opacity-0');
           entry.target.classList.add('animate-fade-in');
           // Don't unobserve to allow re-animation if user scrolls back up and down
-          // This ensures sections don't disappear once they've been seen
         }
       });
     };
@@ -44,12 +43,34 @@ const Index = () => {
       });
     }, 100);
 
+    // Implement smooth scroll behavior for anchor links
+    const handleLinkClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const link = target.closest('a');
+      
+      if (link && link.hash && link.hash.startsWith('#') && document.querySelector(link.hash)) {
+        e.preventDefault();
+        const targetElement = document.querySelector(link.hash);
+        
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.getBoundingClientRect().top + window.scrollY - 100,
+            behavior: 'smooth'
+          });
+        }
+      }
+    };
+
+    // Add event listener for smooth scrolling
+    document.body.addEventListener('click', handleLinkClick);
+
     return () => {
-      // Clean up observer
+      // Clean up observer and event listeners
       const sections = document.querySelectorAll('section:not(#home)');
       sections.forEach(section => {
         observer.unobserve(section);
       });
+      document.body.removeEventListener('click', handleLinkClick);
     };
   }, []);
 
