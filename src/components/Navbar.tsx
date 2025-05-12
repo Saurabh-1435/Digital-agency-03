@@ -20,6 +20,22 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Smooth scroll handler for anchor links
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+    const targetElement = document.getElementById(targetId);
+    
+    if (targetElement) {
+      // Close mobile menu if open
+      if (mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+      
+      // Smooth scroll to the element
+      targetElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <nav
       className={cn(
@@ -28,7 +44,7 @@ const Navbar = () => {
       )}
     >
       <div className="container mx-auto px-4 flex justify-between items-center">
-        <a href="#" className="flex items-center gap-2 text-2xl font-bold">
+        <a href="#home" className="flex items-center gap-2 text-2xl font-bold" onClick={(e) => handleSmoothScroll(e, 'home')}>
           <span className="text-agency-purple">Pixel</span>
           <span className="text-agency-orange">Pulse</span>
         </a>
@@ -60,7 +76,7 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-6">
-          <NavLinks isScrolled={isScrolled} />
+          <NavLinks isScrolled={isScrolled} handleSmoothScroll={handleSmoothScroll} />
           <Button
             className={cn(
               "rounded-full",
@@ -68,6 +84,11 @@ const Navbar = () => {
                 ? "bg-agency-purple hover:bg-agency-purple/90 text-white"
                 : "bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm"
             )}
+            onClick={(e) => {
+              if (e.target instanceof HTMLButtonElement) {
+                handleSmoothScroll(e as unknown as React.MouseEvent<HTMLAnchorElement>, 'contact')
+              }
+            }}
           >
             Contact Us
           </Button>
@@ -81,8 +102,16 @@ const Navbar = () => {
           )}
         >
           <div className="container mx-auto px-4 py-3 flex flex-col gap-3">
-            <NavLinks mobile />
-            <Button className="bg-agency-purple hover:bg-agency-purple/90 rounded-full">
+            <NavLinks mobile handleSmoothScroll={handleSmoothScroll} />
+            <Button 
+              className="bg-agency-purple hover:bg-agency-purple/90 rounded-full"
+              onClick={(e) => {
+                if (e.target instanceof HTMLButtonElement) {
+                  handleSmoothScroll(e as unknown as React.MouseEvent<HTMLAnchorElement>, 'contact');
+                  setMobileMenuOpen(false);
+                }
+              }}
+            >
               Contact Us
             </Button>
           </div>
@@ -95,16 +124,17 @@ const Navbar = () => {
 type NavLinksProps = {
   mobile?: boolean;
   isScrolled?: boolean;
+  handleSmoothScroll: (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => void;
 };
 
-const NavLinks = ({ mobile, isScrolled }: NavLinksProps) => {
+const NavLinks = ({ mobile, isScrolled, handleSmoothScroll }: NavLinksProps) => {
   const links = [
-    { name: "Home", href: "#home" },
-    { name: "About", href: "#about" },
-    { name: "Services", href: "#services" },
-    { name: "Portfolio", href: "#portfolio" },
-    { name: "Pricing", href: "#pricing" },
-    { name: "Testimonials", href: "#testimonials" },
+    { name: "Home", href: "#home", id: "home" },
+    { name: "About", href: "#about", id: "about" },
+    { name: "Services", href: "#services", id: "services" },
+    { name: "Portfolio", href: "#portfolio", id: "portfolio" },
+    { name: "Pricing", href: "#pricing", id: "pricing" },
+    { name: "Testimonials", href: "#testimonials", id: "testimonials" },
   ];
 
   return (
@@ -113,6 +143,7 @@ const NavLinks = ({ mobile, isScrolled }: NavLinksProps) => {
         <a
           key={link.name}
           href={link.href}
+          onClick={(e) => handleSmoothScroll(e, link.id)}
           className={cn(
             "font-medium transition-colors duration-200",
             mobile
