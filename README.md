@@ -6,7 +6,7 @@ This is a fast, modern web application built using top-tier frontend technologie
 
 ## 🔗 Project Info
 
-**Live URL**: 
+**Live URL**: https://ditital-agency-03.netlify.app/
 
 ---
 
